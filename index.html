@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-PT" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Venda Cosméticos - Venda Cosméticos Hub Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fdf2f8',
+              500: '#f43f5e',
+              600: '#e11d48',
+              700: '#be123c',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.8);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-[#0b0d13] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-rose-500 selection:text-white">
+
+  <!-- Toast Notification Alert -->
+  <div id="toast" class="fixed top-5 right-5 z-50 transform -translate-y-20 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-slate-900/95 border border-emerald-500/40 text-emerald-300 shadow-2xl backdrop-blur-md text-xs font-medium">
+    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toastMessage">Operação realizada com sucesso!</span>
+  </div>
+
+  <!-- Header Responsivo -->
+  <header class="sticky top-0 z-40 bg-[#0f121a]/90 backdrop-blur-md border-b border-slate-800/80 px-4 sm:px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-500 via-indigo-600 to-blue-500 flex items-center justify-center text-white shadow-lg shadow-rose-500/20 font-extrabold text-sm flex-shrink-0">
+        V
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-sm sm:text-base font-bold text-white tracking-tight truncate max-w-[200px] sm:max-w-xs md:max-w-md">
+            Venda Cosméticos - Venda Cosméticos Hub Pro
+          </h1>
+          <span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+            Gestão &amp; Produtividade
+          </span>
+        </div>
+        <p class="text-[11px] text-slate-400 truncate hidden sm:block">
+          Sistema moderno e interativo projetado especificamente para: &quot;Crie a app de venda de cosméticos&quot;. Layout totalmente responsivo com controles em tempo real.
+        </p>
+      </div>
+    </div>
+
+    <!-- Actions & Responsive Nav -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <button onclick="openModal()" class="px-3.5 py-2 bg-gradient-to-r from-rose-500 to-indigo-600 hover:opacity-90 active:scale-95 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-rose-500/20 transition cursor-pointer">
+        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+        <span>Adicionar</span>
+      </button>
+
+      <!-- Mobile Hamburger Toggle -->
+      <button onclick="toggleMobileNav()" class="sm:hidden p-2 text-slate-300 hover:text-white bg-slate-800/80 rounded-xl border border-slate-700/60 cursor-pointer" aria-label="Abrir Menu">
+        <i data-lucide="menu" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Overlay -->
+  <div id="mobileDrawer" class="sm:hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden transition-opacity">
+    <div class="w-4/5 max-w-xs bg-[#0e1118] h-full border-r border-slate-800 p-5 flex flex-col justify-between">
+      <div class="space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+            <span class="text-xs font-bold text-white uppercase tracking-wider">Navegação</span>
+          </div>
+          <button onclick="toggleMobileNav()" class="text-slate-400 hover:text-white p-1">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <nav class="space-y-1">
+          
+            <button onclick="switchView('overview'); toggleMobileNav();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition bg-rose-500/10 text-rose-400 font-bold border border-rose-500/20">
+              <i data-lucide="layout-dashboard" class="w-4 h-4 text-slate-400"></i>
+              <span>Painel Principal</span>
+            </button>
+          
+            <button onclick="switchView('records'); toggleMobileNav();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition ">
+              <i data-lucide="list-checks" class="w-4 h-4 text-slate-400"></i>
+              <span>Registros & Itens</span>
+            </button>
+          
+            <button onclick="switchView('activity'); toggleMobileNav();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition ">
+              <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
+              <span>Atividades Recentes</span>
+            </button>
+          
+            <button onclick="switchView('settings'); toggleMobileNav();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition ">
+              <i data-lucide="sliders" class="w-4 h-4 text-slate-400"></i>
+              <span>Configurações</span>
+            </button>
+          
+        </nav>
+      </div>
+
+      <div class="p-3 bg-slate-900/60 border border-slate-800 rounded-xl text-[11px] text-slate-400 text-center">
+        Aplicação 100% Responsiva • FBI Easy Studio
+      </div>
+    </div>
+  </div>
+
+  <!-- Subheader Navigation Desktop Tabs -->
+  <div class="hidden sm:flex border-b border-slate-800/70 bg-[#0c0e15] px-6">
+    <div class="flex items-center gap-1 overflow-x-auto py-1">
+      
+        <button onclick="switchView('overview')" id="tab-overview" class="tab-btn px-4 py-2 text-xs font-semibold rounded-xl flex items-center gap-2 transition cursor-pointer bg-slate-800 text-white border border-slate-700/80 shadow-sm">
+          <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+          <span>Painel Principal</span>
+        </button>
+      
+        <button onclick="switchView('records')" id="tab-records" class="tab-btn px-4 py-2 text-xs font-semibold rounded-xl flex items-center gap-2 transition cursor-pointer text-slate-400 hover:text-white hover:bg-slate-900">
+          <i data-lucide="list-checks" class="w-3.5 h-3.5"></i>
+          <span>Registros & Itens</span>
+        </button>
+      
+        <button onclick="switchView('activity')" id="tab-activity" class="tab-btn px-4 py-2 text-xs font-semibold rounded-xl flex items-center gap-2 transition cursor-pointer text-slate-400 hover:text-white hover:bg-slate-900">
+          <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+          <span>Atividades Recentes</span>
+        </button>
+      
+        <button onclick="switchView('settings')" id="tab-settings" class="tab-btn px-4 py-2 text-xs font-semibold rounded-xl flex items-center gap-2 transition cursor-pointer text-slate-400 hover:text-white hover:bg-slate-900">
+          <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+          <span>Configurações</span>
+        </button>
+      
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+    <!-- KPI Metric Cards Grid -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      
+        <div class="bg-gradient-to-b from-slate-900/90 to-slate-950/80 border border-slate-800/80 rounded-2xl p-4 sm:p-5 shadow-lg relative overflow-hidden group hover:border-slate-700 transition">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] sm:text-xs font-medium text-slate-400 truncate">Total de Registros</span>
+            <div class="w-8 h-8 rounded-xl bg-slate-800/80 text-rose-400 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition">
+              <i data-lucide="database" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-lg sm:text-2xl font-extrabold text-white tracking-tight">48 ativos</div>
+          <div class="flex items-center gap-1 mt-1 text-[11px] text-emerald-400 font-semibold">
+            <i data-lucide="trending-up" class="w-3 h-3"></i>
+            <span>+12% este mês</span>
+          </div>
+        </div>
+      
+        <div class="bg-gradient-to-b from-slate-900/90 to-slate-950/80 border border-slate-800/80 rounded-2xl p-4 sm:p-5 shadow-lg relative overflow-hidden group hover:border-slate-700 transition">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] sm:text-xs font-medium text-slate-400 truncate">Taxa de Eficiência</span>
+            <div class="w-8 h-8 rounded-xl bg-slate-800/80 text-rose-400 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-lg sm:text-2xl font-extrabold text-white tracking-tight">96.8%</div>
+          <div class="flex items-center gap-1 mt-1 text-[11px] text-emerald-400 font-semibold">
+            <i data-lucide="trending-up" class="w-3 h-3"></i>
+            <span>+3.4%</span>
+          </div>
+        </div>
+      
+        <div class="bg-gradient-to-b from-slate-900/90 to-slate-950/80 border border-slate-800/80 rounded-2xl p-4 sm:p-5 shadow-lg relative overflow-hidden group hover:border-slate-700 transition">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] sm:text-xs font-medium text-slate-400 truncate">Itens em Andamento</span>
+            <div class="w-8 h-8 rounded-xl bg-slate-800/80 text-rose-400 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition">
+              <i data-lucide="activity" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-lg sm:text-2xl font-extrabold text-white tracking-tight">14 pendentes</div>
+          <div class="flex items-center gap-1 mt-1 text-[11px] text-emerald-400 font-semibold">
+            <i data-lucide="trending-up" class="w-3 h-3"></i>
+            <span>8 finalizados hoje</span>
+          </div>
+        </div>
+      
+        <div class="bg-gradient-to-b from-slate-900/90 to-slate-950/80 border border-slate-800/80 rounded-2xl p-4 sm:p-5 shadow-lg relative overflow-hidden group hover:border-slate-700 transition">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] sm:text-xs font-medium text-slate-400 truncate">Índice de Conclusão</span>
+            <div class="w-8 h-8 rounded-xl bg-slate-800/80 text-rose-400 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="text-lg sm:text-2xl font-extrabold text-white tracking-tight">92.4%</div>
+          <div class="flex items-center gap-1 mt-1 text-[11px] text-emerald-400 font-semibold">
+            <i data-lucide="trending-up" class="w-3 h-3"></i>
+            <span>+6.1%</span>
+          </div>
+        </div>
+      
+    </section>
+
+    <!-- Toolbar: Search, Filters & View Toggle -->
+    <section class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+      <!-- Search Input -->
+      <div class="relative flex-1 max-w-md">
+        <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+        <input
+          type="text"
+          id="searchInput"
+          oninput="handleSearch(this.value)"
+          placeholder="Pesquisar por título, descrição ou categoria..."
+          class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition"
+        />
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 custom-scrollbar">
+        
+          <button onclick="filterCategory('Todos')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer bg-rose-500 text-white">
+            Todos
+          </button>
+        
+          <button onclick="filterCategory('Prioridade Alta')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer bg-slate-800/80 hover:bg-slate-800 text-slate-300">
+            Prioridade Alta
+          </button>
+        
+          <button onclick="filterCategory('Em Andamento')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer bg-slate-800/80 hover:bg-slate-800 text-slate-300">
+            Em Andamento
+          </button>
+        
+          <button onclick="filterCategory('Concluídos')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer bg-slate-800/80 hover:bg-slate-800 text-slate-300">
+            Concluídos
+          </button>
+        
+          <button onclick="filterCategory('Arquivados')" class="filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer bg-slate-800/80 hover:bg-slate-800 text-slate-300">
+            Arquivados
+          </button>
+        
+      </div>
+    </section>
+
+    <!-- Cards Grid -->
+    <section id="itemsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Rendered dynamically via JavaScript -->
+    </section>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden text-center py-16 bg-slate-900/30 border border-dashed border-slate-800 rounded-2xl p-6">
+      <i data-lucide="inbox" class="w-12 h-12 text-slate-600 mx-auto mb-3"></i>
+      <h3 class="text-sm font-bold text-white">Nenhum registro encontrado</h3>
+      <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+        Tente ajustar os filtros de busca ou clique no botão acima para adicionar um novo registro.
+      </p>
+      <button onclick="openModal()" class="mt-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold inline-flex items-center gap-1.5 transition cursor-pointer">
+        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+        <span>Adicionar Novo Registro</span>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Create / Add Item Modal -->
+  <div id="addModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-[#0f121a] border border-slate-800 rounded-2xl shadow-2xl overflow-hidden animate-fadeIn">
+      <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-rose-500"></div>
+          <h3 class="text-sm font-bold text-white">Novo Registro - Venda Cosméticos</h3>
+        </div>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form id="addForm" onsubmit="handleAddItem(event)" class="p-5 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Título / Nome</label>
+          <input
+            type="text"
+            id="modalTitle"
+            required
+            placeholder="Ex: Novo item para Venda Cosméticos"
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Categoria</label>
+            <select id="modalCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500">
+              <option value="Prioridade Alta">Prioridade Alta</option><option value="Em Andamento">Em Andamento</option><option value="Concluídos">Concluídos</option><option value="Arquivados">Arquivados</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Métrica / Valor</label>
+            <input
+              type="text"
+              id="modalMetric"
+              placeholder="Ex: R$ 140,00 ou 95%"
+              class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Descrição Detalhada</label>
+          <textarea
+            id="modalDescription"
+            rows="3"
+            placeholder="Descreva as características ou observações do registro..."
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500 resize-none"
+          ></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+          <button type="button" onclick="closeModal()" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+            Cancelar
+          </button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-rose-500 to-indigo-600 hover:opacity-90 text-white shadow-md transition">
+            Salvar Registro
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer Responsivo -->
+  <footer class="border-t border-slate-800/80 bg-[#090b10] py-4 px-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>Venda Cosméticos - Venda Cosméticos Hub Pro • Produzido com FBI Easy v.01</div>
+      <div class="flex items-center gap-3">
+        <span class="flex items-center gap-1.5 text-emerald-400">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          Ambiente Interativo Ativo
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interatividade JavaScript Vanilla Completa -->
+  <script>
+    let appData = [{"id":1,"title":"Módulo Central: Venda Cosméticos Estruturado","category":"Prioridade Alta","description":"Implementação das regras fundamentais para venda cosméticos com sincronização automática de dados.","status":"Operacional","statusColor":"emerald","metricLabel":"Score","metricValue":"98/100"},{"id":2,"title":"Painel de Controle e Auditoria em Tempo Real","category":"Em Andamento","description":"Visualização unificada de métricas, alarmes proativos e filtros por período.","status":"Ativo","statusColor":"blue","metricLabel":"Score","metricValue":"92/100"},{"id":3,"title":"Automação de Tarefas & Alertas Instantâneos","category":"Prioridade Alta","description":"Disparo de notificações imediatas para novas ocorrências e atualizações de status.","status":"Configurado","statusColor":"emerald","metricLabel":"Score","metricValue":"95/100"},{"id":4,"title":"Relatórios Consolidados & Exportação CSV","category":"Concluídos","description":"Geração de relatórios com gráficos e dados estruturados para download.","status":"Finalizado","statusColor":"purple","metricLabel":"Score","metricValue":"100/100"},{"id":5,"title":"Controle de Acessos & Perfis de Usuário","category":"Em Andamento","description":"Segregação de privilégios com autenticação e trilha de auditoria completa.","status":"Em Revisão","statusColor":"amber","metricLabel":"Score","metricValue":"88/100"}];
+    let activeFilter = 'Todos';
+    let searchQuery = '';
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMessage');
+      if (toast && toastMsg) {
+        toastMsg.textContent = message;
+        toast.classList.remove('-translate-y-20', 'opacity-0', 'pointer-events-none');
+        toast.classList.add('translate-y-0', 'opacity-100');
+        setTimeout(() => {
+          toast.classList.add('-translate-y-20', 'opacity-0', 'pointer-events-none');
+          toast.classList.remove('translate-y-0', 'opacity-100');
+        }, 2500);
+      }
+    }
+
+    function renderItems() {
+      const grid = document.getElementById('itemsGrid');
+      const emptyState = document.getElementById('emptyState');
+      if (!grid) return;
+
+      const filtered = appData.filter(item => {
+        const matchesCategory = activeFilter === 'Todos' || item.category === activeFilter;
+        const query = searchQuery.toLowerCase();
+        const matchesSearch = !query || 
+          item.title.toLowerCase().includes(query) || 
+          item.description.toLowerCase().includes(query) || 
+          item.category.toLowerCase().includes(query);
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      grid.innerHTML = filtered.map(item => `
+        <div class="bg-slate-900/70 border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition group">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2.5">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700/60">
+                ${item.category}
+              </span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-${item.statusColor}-500/10 text-${item.statusColor}-400 border border-${item.statusColor}-500/20">
+                ${item.status}
+              </span>
+            </div>
+
+            <h3 class="text-sm font-bold text-white tracking-tight line-clamp-2 group-hover:text-rose-400 transition mb-1.5">
+              ${item.title}
+            </h3>
+
+            <p class="text-xs text-slate-400 line-clamp-3 leading-relaxed mb-4">
+              ${item.description}
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] uppercase font-semibold text-slate-500 block">${item.metricLabel}</span>
+              <span class="text-xs font-extrabold text-white">${item.metricValue}</span>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              <button onclick="toggleItemStatus(${item.id})" title="Alternar Status" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition cursor-pointer">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="deleteItem(${item.id})" title="Remover" class="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-400 transition cursor-pointer">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    }
+
+    function handleSearch(val) {
+      searchQuery = val || '';
+      renderItems();
+    }
+
+    function filterCategory(cat) {
+      activeFilter = cat;
+      document.querySelectorAll('.filter-pill').forEach(pill => {
+        if (pill.textContent.trim() === cat) {
+          pill.className = 'filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer bg-rose-500 text-white';
+        } else {
+          pill.className = 'filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer bg-slate-800/80 hover:bg-slate-800 text-slate-300';
+        }
+      });
+      renderItems();
+      showToast(`Filtro aplicado: ${cat}`);
+    }
+
+    function toggleItemStatus(id) {
+      appData = appData.map(item => {
+        if (item.id === id) {
+          const isDone = item.status === 'Concluído' || item.status === 'Servido' || item.status === 'Disponível';
+          return {
+            ...item,
+            status: isDone ? 'Em Andamento' : 'Concluído',
+            statusColor: isDone ? 'amber' : 'emerald'
+          };
+        }
+        return item;
+      });
+      renderItems();
+      showToast('Status do item atualizado com sucesso!');
+    }
+
+    function deleteItem(id) {
+      appData = appData.filter(i => i.id !== id);
+      renderItems();
+      showToast('Item removido com sucesso!');
+    }
+
+    function openModal() {
+      document.getElementById('addModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('addModal').classList.add('hidden');
+    }
+
+    function handleAddItem(e) {
+      e.preventDefault();
+      const title = document.getElementById('modalTitle').value.trim();
+      const category = document.getElementById('modalCategory').value;
+      const metric = document.getElementById('modalMetric').value.trim() || 'R$ 99,00';
+      const desc = document.getElementById('modalDescription').value.trim() || 'Novo registro adicionado pelo painel.';
+
+      if (!title) return;
+
+      const newItem = {
+        id: Date.now(),
+        title,
+        category,
+        description: desc,
+        status: 'Ativo',
+        statusColor: 'emerald',
+        metricLabel: 'Valor',
+        metricValue: metric
+      };
+
+      appData.unshift(newItem);
+      document.getElementById('addForm').reset();
+      closeModal();
+      renderItems();
+      showToast(`Registro "${title}" adicionado!`);
+    }
+
+    function switchView(viewId) {
+      showToast(`Visualização: ${viewId.toUpperCase()}`);
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-slate-800', 'text-white', 'border', 'border-slate-700/80', 'shadow-sm');
+        btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-slate-900');
+      });
+      const activeBtn = document.getElementById('tab-' + viewId);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-slate-800', 'text-white', 'border', 'border-slate-700/80', 'shadow-sm');
+        activeBtn.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-slate-900');
+      }
+    }
+
+    function toggleMobileNav() {
+      const drawer = document.getElementById('mobileDrawer');
+      drawer.classList.toggle('hidden');
+    }
+
+    // Initialize App
+    document.addEventListener('DOMContentLoaded', () => {
+      renderItems();
+    });
+  </script>
+</body>
+</html>
